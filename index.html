@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="中医时辰开穴：子午流注·灵龟八法·飞腾八法·五运六气·五门十变，支持余5寄宫、复制、打印">
+<title>中医时辰开穴 · 综合版</title>
+<style>
+:root{
+  --paper:#f6efdd; --paper2:#efe5cb; --card:#fffdf4; --ink:#2c2720; --ink2:#6b5f4d;
+  --red:#8c1f28; --red2:#b03a2e; --gold:#b8860b; --line:#e0d4b6; --green:#3f6b3f; --blue:#2a5b8c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Noto Serif SC","Songti SC","SimSun","STSong",serif;
+  background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);
+  color:var(--ink); line-height:1.6; font-size:15px;
+  background-image:radial-gradient(circle at 20% 10%, rgba(140,31,40,.05), transparent 40%),
+                   radial-gradient(circle at 80% 90%, rgba(184,134,11,.07), transparent 40%);
+}
+header.top{
+  background:linear-gradient(135deg,#7c161d 0%,#9c2a32 60%,#b03a2e 100%);
+  color:#f8efdc; text-align:center; padding:18px 14px 14px; border-bottom:4px solid #5f0f15;
+}
+header.top h1{font-size:1.5rem; letter-spacing:.35em; text-indent:.35em; font-weight:700}
+header.top .sub{font-size:.8rem; opacity:.85; letter-spacing:.18em; margin-top:4px; text-wrap:balance}
+#clockBar{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:10px; align-items:baseline}
+#clockBar .big{font-size:1.9rem; font-weight:700; font-family:"Times New Roman",serif; letter-spacing:.05em}
+#clockBar .sc{color:#f0c060; font-size:1.1rem; font-weight:700}
+#clockBar .ganzi{font-size:.95rem; background:rgba(0,0,0,.25); padding:2px 10px; border-radius:20px; border:1px solid rgba(255,255,255,.25)}
+nav.tabs{
+  display:flex; gap:6px; padding:10px 12px; overflow-x:auto; background:var(--paper);
+  position:sticky; top:0; z-index:50; box-shadow:0 2px 8px rgba(60,40,10,.12);
+  justify-content:center;
+}
+/* 手机窄屏时改回左对齐，避免首个标签被截断 */
+@media (max-width: 500px){
+  nav.tabs{ justify-content:flex-start; }
+}
+nav.tabs button{
+  flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink);
+  padding:8px 16px; border-radius:24px; font-size:.95rem; cursor:pointer; font-family:inherit;
+  letter-spacing:.1em; transition:.2s;
+}
+nav.tabs button.active{background:var(--red); color:#fff; border-color:var(--red)}
+nav.tabs button:hover:not(.active){background:#fff}
+main{max-width:980px; margin:0 auto; padding:14px 12px 60px}
+section.tab{display:none}
+section.tab.active{display:block; animation:fadein .25s}
+@keyframes fadein{from{opacity:0; transform:translateY(4px)}to{opacity:1}}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:14px 16px; margin-bottom:14px; box-shadow:0 1px 4px rgba(80,60,20,.08);
+}
+.card h3{font-size:1.05rem; color:var(--red); letter-spacing:.15em; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.card h3 .tag{font-size:.7rem; background:var(--red); color:#fff; border-radius:10px; padding:1px 8px; letter-spacing:.05em}
+.card h3 .tag.blue{background:var(--blue)}
+.grid{display:grid; gap:14px}
+@media(min-width:720px){.grid.c2{grid-template-columns:1fr 1fr}}
+table.tbl{width:100%; border-collapse:collapse; font-size:.88rem; margin-top:6px}
+table.tbl th,table.tbl td{border:1px solid var(--line); padding:5px 8px; text-align:center}
+table.tbl th{background:#f3ead2; color:#5f3a12; font-weight:600}
+table.tbl tr.cur td{background:#fdeeda; font-weight:600; color:var(--red)}
+table.tbl tr:nth-child(even):not(.cur) td{background:rgba(243,234,210,.4)}
+.point-chip{
+  display:inline-block; background:#fff; border:1px solid var(--red2); color:var(--red);
+  border-radius:14px; padding:2px 10px; margin:3px 4px 3px 0; font-size:.85rem; cursor:default;
+}
+.point-chip b{font-size:.95rem}
+.badge{display:inline-block; border-radius:10px; padding:0 8px; font-size:.72rem; margin-left:6px; vertical-align:middle}
+.badge.nj{background:#fde8d7; color:#9c4a00; border:1px solid #f0c090}
+.badge.nz{background:#e4f0e4; color:var(--green); border:1px solid #b8d4b8}
+.badge.lg{background:#e8e0f5; color:#5b3fa0; border:1px solid #c4b4e4}
+.badge.ft{background:#e0f0f4; color:#1f6d7a; border:1px solid #a8d4dc}
+.badge.wm{background:#f5ecd8; color:#8a6d1a; border:1px solid #d8c48a}
+.calc-line{font-size:.82rem; color:var(--ink2); margin:4px 0}
+.small{font-size:.78rem; color:var(--ink2)}
+.note{font-size:.8rem; background:#fbf4e0; border-left:3px solid var(--gold); padding:8px 12px; border-radius:0 8px 8px 0; margin-top:8px}
+.flex{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+input[type=date],input[type=time],input[type=number],select{
+  font-family:inherit; font-size:.95rem; padding:6px 8px; border:1px solid var(--line);
+  border-radius:8px; background:#fff; color:var(--ink);
+}
+button.btn{
+  font-family:inherit; border:1px solid var(--red); background:var(--red); color:#fff;
+  padding:7px 16px; border-radius:20px; cursor:pointer; font-size:.9rem; letter-spacing:.1em;
+}
+button.btn.ghost{background:#fff; color:var(--red)}
+button.btn:hover{opacity:.88}
+.switch{display:flex; align-items:center; gap:6px; font-size:.88rem; cursor:pointer; user-select:none}
+.switch input{accent-color:var(--red); width:16px; height:16px}
+.needle-list{list-style:none}
+.needle-list li{display:flex; align-items:flex-start; gap:10px; padding:8px 4px; border-bottom:1px dashed var(--line)}
+.needle-list li:last-child{border-bottom:none}
+.needle-list .nm{font-size:1.05rem; font-weight:700; color:var(--red); min-width:52px}
+.needle-list .jm{font-size:.82rem; color:var(--ink2); margin-top:2px}
+.cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
+.cal-head button{border:1px solid var(--line); background:#fff; border-radius:8px; padding:4px 12px; cursor:pointer; font-family:inherit; font-size:.9rem}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px}
+.cal-cell{border:1px solid var(--line); background:#fffdf6; border-radius:6px; padding:4px 3px; min-height:58px; cursor:pointer; font-size:.75rem; text-align:center; position:relative}
+.cal-cell .d{font-size:1rem; font-weight:600}
+.cal-cell .l{font-size:.68rem; color:var(--ink2)}
+.cal-cell .gz{font-size:.62rem; color:#a07a2a}
+.cal-cell.term{border-color:var(--red2); background:#fdf0e6}
+.cal-cell.term .l{color:var(--red)}
+.cal-cell.today{border:2px solid var(--gold); background:#fdf6de}
+.cal-cell.selected{background:#f3d9d9; border-color:var(--red)}
+.cal-cell .term-mark{position:absolute; top:2px; right:3px; font-size:.6rem; color:var(--red)}
+.cal-cell.weekend .d{color:var(--red)}
+.cal-cell.other .d{opacity:.35}
+.week-row{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:4px}
+.week-row span{text-align:center; font-size:.75rem; color:var(--ink2)}
+.yunqi-big{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:6px 0}
+.yunqi-big .yq-item{background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px 14px; text-align:center; min-width:110px}
+.yunqi-big .yq-item .k{font-size:.7rem; color:var(--ink2)}
+.yunqi-big .yq-item .v{font-size:1.15rem; font-weight:700; color:var(--red)}
+.stepbar{display:flex; flex-wrap:wrap; gap:6px; margin:6px 0}
+.stepbar .st{flex:1 1 90px; min-width:80px; text-align:center; border:1px solid var(--line); border-radius:8px; padding:6px 4px; background:#fff}
+.stepbar .st.cur{background:#fdeeda; border-color:var(--red2)}
+.stepbar .st .n{font-size:.7rem; color:var(--ink2)}
+.stepbar .st .v{font-weight:700}
+footer{text-align:center; font-size:.75rem; color:var(--ink2); padding:18px 12px 30px; border-top:1px solid var(--line); margin-top:10px}
+footer .warn{color:var(--red); font-weight:600}
+.disc{font-size:.78rem; color:var(--ink2); margin-top:8px}
+.poem{font-family:"STKaiti","KaiTi",serif; background:#faf3e0; border:1px dashed var(--gold); border-radius:8px; padding:10px 14px; margin:8px 0; font-size:.92rem; line-height:2}
+.poem .t{color:var(--red); font-weight:700}
+.opt-bar{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px}
+@media(max-width:600px){.opt-bar{grid-template-columns:1fr}}
+.opt-item{background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px 12px; display:flex; align-items:center; gap:8px; font-size:.85rem}
+.opt-item label{flex:0 0 auto; color:var(--ink2)}
+.opt-item select{flex:1; min-width:0}
+.opt-item.disabled{opacity:.5}
+.copy-toast{
+  position:fixed; left:50%; bottom:36px; transform:translateX(-50%) translateY(20px);
+  background:rgba(60,40,20,.92); color:#fff; padding:10px 22px; border-radius:22px;
+  font-size:.9rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.copy-toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+@media print {
+  body{background:#fff}
+  header.top{background:#fff !important; color:#000 !important; border-bottom:2px solid #000}
+  #clockBar .ganzi{background:#eee !important; color:#000 !important; border-color:#999 !important}
+  #clockBar .sc{color:#000 !important}
+  nav.tabs, .opt-bar, button.btn, .copy-toast, .cal-head button, footer{display:none !important}
+  section.tab:not(.active){display:none !important}
+  .card{box-shadow:none; border-color:#888; break-inside:avoid}
+  .card h3 .tag{background:#666 !important}
+  main{padding:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>中医时辰开穴</h1>
+  <div class="sub">子午流注 · 灵龟八法 · 飞腾八法 · 五运六气 · 五门十变</div>
+  <div id="clockBar">
+    <span class="big" id="clockTime">--:--:--</span>
+    <span class="ganzi" id="clockGanzi">----</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="open" class="active">⏱ 即时开穴</button>
+  <button data-tab="cal">📅 万年历</button>
+  <button data-tab="yunqi">☯ 五运六气</button>
+  <button data-tab="wumen">🕯 五门十变</button>
+  <button data-tab="about">📖 说明</button>
+</nav>
+
+<main>
+<section class="tab active" id="tab-open">
+  <div class="card">
+    <h3>⏱ 输入时间，即刻开穴 <span class="tag">针灸下针参考</span></h3>
+    <div class="flex" style="margin-bottom:8px">
+      <label class="switch"><input type="checkbox" id="optFollow" checked>跟随当前时间</label>
+      <label class="switch"><input type="checkbox" id="optLateZi" checked>23:00后子时按次日干支</label>
+      <label class="switch"><input type="checkbox" id="optAuto" checked>每分钟自动刷新</label>
+    </div>
+    <div class="flex">
+      <input type="date" id="dateInput">
+      <input type="time" id="timeInput">
+      <button class="btn ghost" id="btnNow">回到此刻</button>
+      <button class="btn" id="btnCopy">复制结果</button>
+      <button class="btn ghost" id="btnPrint">打印</button>
+    </div>
+    <div class="opt-bar">
+      <div class="opt-item">
+        <label>余数5处理</label>
+        <select id="optFive">
+          <option value="kun">余5按中宫寄坤（照海）</option>
+          <option value="gender">余5按性别寄宫</option>
+        </select>
+      </div>
+      <div class="opt-item disabled" id="sexOptBox">
+        <label>性别</label>
+        <select id="optSex" disabled>
+          <option value="male">男：寄坤 → 照海</option>
+          <option value="female">女：寄艮 → 内关</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="ganzhiSummary"></div>
+  <div class="card" id="summaryCard"></div>
+  <div class="grid c2">
+    <div class="card" id="cardNajia"></div>
+    <div class="card" id="cardNazi"></div>
+    <div class="card" id="cardLinggui"></div>
+    <div class="card" id="cardFeiteng"></div>
+    <div class="card" id="cardWumen"></div>
+    <div class="card" id="cardYunqiMini"></div>
+  </div>
+  <div class="card" id="cardDayTable"></div>
+</section>
+
+<section class="tab" id="tab-cal">
+  <div class="card">
+    <h3>📅 万年历 <span class="tag">农历 · 干支 · 节气</span></h3>
+    <div class="cal-head">
+      <button id="calPrev">‹ 上月</button>
+      <span id="calTitle" style="font-size:1.05rem;font-weight:700"></span>
+      <button id="calNext">下月 ›</button>
+    </div>
+    <div class="week-row">
+      <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <p class="note">点击任意日期可设为开穴时间。日干支以子时（23:00）换日；农历日期按公历日显示。</p>
+  </div>
+</section>
+
+<section class="tab" id="tab-yunqi">
+  <div class="card">
+    <h3>☯ 五运六气 <span class="tag">运气学说</span></h3>
+    <div class="flex">
+      <button class="btn ghost" id="yqPrev">‹ 上一年</button>
+      <input type="number" id="yqYear" min="1900" max="2100" style="width:90px;text-align:center">
+      <button class="btn ghost" id="yqNext">下一年 ›</button>
+      <span class="small">岁运以立春交接</span>
+    </div>
+    <div id="yqContent"></div>
+  </div>
+</section>
+
+<section class="tab" id="tab-wumen">
+  <div class="card" id="wmContent"></div>
+</section>
+
+<section class="tab" id="tab-about">
+  <div class="card" id="aboutContent"></div>
+</section>
+</main>
+
+<footer>
+  <div class="warn">⚠ 本工具仅供中医理论学习与参考，不构成医疗建议。针刺操作须由具备资质的专业医师进行。</div>
+  <div class="disc">历法数据由 lunar-javascript 天文算法提供（Meeus 法）。节气/农历按浏览器本地时区计算，如需真太阳时请自行校正。</div>
+</footer>
+
+<div class="copy-toast" id="toast">已复制到剪贴板</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.1/lunar.js"></script>
+<script>
+/* CDN fallback */
+if (typeof Solar === 'undefined') {
+  document.write('<script src="https://unpkg.com/lunar-javascript@1.7.1/lunar.js"><\/script>');
+}
+</script>
+<script>
+/*__CORE_START__*/
+(function(){
+'use strict';
+
+if (typeof Solar === 'undefined' || typeof Lunar === 'undefined') {
+  var main = document.querySelector('main');
+  if (main) main.innerHTML = '<div class="card"><h3>⚠ 历法库加载失败</h3>' +
+    '<p>本工具需要联网加载 <b>lunar-javascript</b> 历法库（jsDelivr / unpkg）。请检查网络连接后刷新页面，或下载 lunar.js 放到同目录后修改引用路径。</p></div>';
+  return;
+}
+
+/* ================= 基础工具 ================= */
+const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SHENGXIAO = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+const WX = ['木','火','土','金','水'];
+const mod = (n,m) => ((n % m) + m) % m;
+const ganziName = idx => GAN[mod(idx,10)] + ZHI[mod(idx,12)];
+const pad2 = n => (n < 10 ? '0' : '') + n;
+
+/* 日干支：1949-10-01 = 甲子(0) */
+function dayGanzhiIndex(y,m,d){
+  return mod(Math.round((Date.UTC(y,m-1,d) - Date.UTC(1949,9,1)) / 86400000), 60);
+}
+/* 五鼠遁：时干 */
+function hourStem(dayStem, branchIdx){ return mod(dayStem*2 + branchIdx, 10); }
+/* 时支序 */
+function hourBranchIdx(h){ return mod(Math.floor((h + 1) / 2), 12); }
+/* 五虎遁 */
+function monthStem(yearStem, mb){ return mod(yearStem*2 + mb + 2, 10); }
+
+/* ================= 节气（lunar-javascript） ================= */
+const TERM_CACHE = {};
+function termTable(year){
+  if (!TERM_CACHE[year]) TERM_CACHE[year] = Solar.fromYmd(year, 6, 30).getLunar().getJieQiTable();
+  return TERM_CACHE[year];
+}
+function solarTermTimeMs(year, lambda){
+  const t = (lambda === 270) ? termTable(year + 1)['冬至'] : termTable(year)[TERM_BY_L[lambda]];
+  const p = t._p;
+  return new Date(p.year, p.month - 1, p.day, p.hour, p.minute, p.second).getTime();
+}
+const TERMS = [
+  {n:'小寒',l:285},{n:'大寒',l:300},{n:'立春',l:315},{n:'雨水',l:330},{n:'惊蛰',l:345},
+  {n:'春分',l:0},{n:'清明',l:15},{n:'谷雨',l:30},{n:'立夏',l:45},{n:'小满',l:60},
+  {n:'芒种',l:75},{n:'夏至',l:90},{n:'小暑',l:105},{n:'大暑',l:120},{n:'立秋',l:135},
+  {n:'处暑',l:150},{n:'白露',l:165},{n:'秋分',l:180},{n:'寒露',l:195},{n:'霜降',l:210},
+  {n:'立冬',l:225},{n:'小雪',l:240},{n:'大雪',l:255},{n:'冬至',l:270}
+];
+const TERM_BY_L = {}; TERMS.forEach(t => TERM_BY_L[t.l] = t.n);
+
+/* 农历 */
+function lunarInfo(y, m, d){
+  const lu = Solar.fromYmd(y, m, d).getLunar();
+  const mo = lu.getMonth();
+  const isLeap = mo < 0;
+  let mc = lu.getMonthInChinese();
+  if (mc === '冬') mc = '十一';
+  if (mc === '腊') mc = '十二';
+  if (mc === '闰冬') mc = '闰十一';
+  if (mc === '闰腊') mc = '闰十二';
+  return {
+    lunarYear: lu.getYear(), monthNum: mo, isLeap, day: lu.getDay(),
+    monthName: mc + '月', dayName: lu.getDayInChinese()
+  };
+}
+
+/* ================= 穴位数据 ================= */
+const MERIDIANS = [
+  {name:'肺经', wx:'金', yin:true,  j:'少商', x:'鱼际', shu:'太渊', jing:'经渠', he:'尺泽', yuan:'太渊'},
+  {name:'大肠经', wx:'金', yin:false, j:'商阳', x:'二间', shu:'三间', jing:'阳溪', he:'曲池', yuan:'合谷'},
+  {name:'胃经', wx:'土', yin:false, j:'厉兑', x:'内庭', shu:'陷谷', jing:'解溪', he:'足三里', yuan:'冲阳'},
+  {name:'脾经', wx:'土', yin:true,  j:'隐白', x:'大都', shu:'太白', jing:'商丘', he:'阴陵泉', yuan:'太白'},
+  {name:'心经', wx:'火', yin:true,  j:'少冲', x:'少府', shu:'神门', jing:'灵道', he:'少海', yuan:'神门'},
+  {name:'小肠经', wx:'火', yin:false, j:'少泽', x:'前谷', shu:'后溪', jing:'阳谷', he:'小海', yuan:'腕骨'},
+  {name:'膀胱经', wx:'水', yin:false, j:'至阴', x:'通谷', shu:'束骨', jing:'昆仑', he:'委中', yuan:'京骨'},
+  {name:'肾经', wx:'水', yin:true,  j:'涌泉', x:'然谷', shu:'太溪', jing:'复溜', he:'阴谷', yuan:'太溪'},
+  {name:'心包经', wx:'火', yin:true,  j:'中冲', x:'劳宫', shu:'大陵', jing:'间使', he:'曲泽', yuan:'大陵'},
+  {name:'三焦经', wx:'火', yin:false, j:'关冲', x:'液门', shu:'中渚', jing:'支沟', he:'天井', yuan:'阳池'},
+  {name:'胆经', wx:'木', yin:false, j:'窍阴', x:'侠溪', shu:'临泣', jing:'阳辅', he:'阳陵泉', yuan:'丘墟'},
+  {name:'肝经', wx:'木', yin:true,  j:'大敦', x:'行间', shu:'太冲', jing:'中封', he:'曲泉', yuan:'太冲'}
+];
+const MERIDIAN_BY_NAME = {}; MERIDIANS.forEach(md => MERIDIAN_BY_NAME[md.name] = md);
+
+const POINT_LOC = {
+  '窍阴':'第4趾外侧趾甲角旁约0.1寸（足窍阴）','侠溪':'足背第4、5趾间，趾蹼缘后方赤白肉际处',
+  '临泣':'足背第4、5跖骨底结合部前方，小趾伸肌腱外侧凹陷处','阳辅':'外踝尖上4寸，腓骨前缘稍前方',
+  '阳陵泉':'腓骨小头前下方凹陷处','丘墟':'外踝前下方，趾长伸肌腱外侧凹陷处',
+  '少泽':'小指尺侧指甲角旁约0.1寸','前谷':'第5掌指关节尺侧远端赤白肉际凹陷处',
+  '后溪':'第5掌指关节尺侧近端赤白肉际凹陷处','阳谷':'腕背横纹尺侧端，尺骨茎突与三角骨之间凹陷处',
+  '小海':'屈肘，尺骨鹰嘴与肱骨内上髁之间凹陷处','腕骨':'第5掌骨基底与三角骨之间赤白肉际凹陷处',
+  '厉兑':'第2趾外侧趾甲角旁约0.1寸','内庭':'足背第2、3趾间，趾蹼缘后方赤白肉际处',
+  '陷谷':'足背第2、3跖骨结合部前方凹陷处','解溪':'踝关节前面中央凹陷处，拇长伸肌腱与趾长伸肌腱之间',
+  '足三里':'犊鼻下3寸，胫骨前嵴外一横指','冲阳':'足背最高处，拇长伸肌腱与趾长伸肌腱之间，足背动脉搏动处',
+  '商阳':'食指桡侧指甲角旁约0.1寸','二间':'第2掌指关节桡侧远端赤白肉际凹陷处',
+  '三间':'第2掌指关节桡侧近端赤白肉际凹陷处','阳溪':'腕背横纹桡侧，拇短伸肌腱与拇长伸肌腱之间凹陷处',
+  '曲池':'屈肘成直角，肘横纹外侧端与肱骨外上髁连线中点','合谷':'第1、2掌骨间，第2掌骨桡侧中点处',
+  '至阴':'小趾外侧趾甲角旁约0.1寸','通谷':'第5跖趾关节前下方赤白肉际凹陷处',
+  '束骨':'第5跖骨小头后下方赤白肉际凹陷处','昆仑':'外踝尖与跟腱之间的凹陷处',
+  '委中':'腘横纹中点，股二头肌腱与半腱肌腱之间','京骨':'第5跖骨粗隆下方赤白肉际凹陷处',
+  '关冲':'无名指尺侧指甲角旁约0.1寸','液门':'手背第4、5指间，指蹼缘后方赤白肉际处',
+  '中渚':'手背第4、5掌骨间，掌指关节后方凹陷处','支沟':'腕背横纹上3寸，尺骨与桡骨间隙中',
+  '天井':'屈肘，肘尖（尺骨鹰嘴）上1寸凹陷处','阳池':'腕背横纹中，指伸肌腱尺侧缘凹陷处',
+  '大敦':'拇趾外侧趾甲角旁约0.1寸','行间':'足背第1、2趾间，趾蹼缘后方赤白肉际处',
+  '太冲':'足背第1、2跖骨结合部前方凹陷处','中封':'内踝前1寸，胫骨前肌腱内侧凹陷处',
+  '曲泉':'屈膝，膝内侧横纹头上方凹陷处','少冲':'小指桡侧指甲角旁约0.1寸',
+  '少府':'第4、5掌骨之间，握拳时小指尖所指处','神门':'腕掌侧横纹尺侧端，尺侧腕屈肌腱桡侧凹陷处',
+  '灵道':'腕掌侧横纹上1.5寸，尺侧腕屈肌腱桡侧','少海':'屈肘，肘横纹内侧端与肱骨内上髁连线中点',
+  '隐白':'拇趾内侧趾甲角旁约0.1寸','大都':'第1跖趾关节前下方赤白肉际凹陷处',
+  '太白':'第1跖骨小头后下方赤白肉际凹陷处','商丘':'内踝前下方凹陷处，舟骨结节与内踝尖连线中点',
+  '阴陵泉':'胫骨内侧髁下方凹陷处','少商':'拇指桡侧指甲角旁约0.1寸',
+  '鱼际':'第1掌骨中点桡侧，赤白肉际处','太渊':'腕掌侧横纹桡侧端，桡动脉搏动处',
+  '经渠':'腕掌侧横纹上1寸，桡骨茎突与桡动脉之间','尺泽':'肘横纹中，肱二头肌腱桡侧凹陷处',
+  '涌泉':'足底前1/3凹陷处，屈足卷趾时足心最凹陷处','然谷':'足舟骨粗隆下方，赤白肉际凹陷处',
+  '太溪':'内踝尖与跟腱之间的凹陷处','复溜':'太溪直上2寸，跟腱前缘',
+  '阴谷':'腘窝内侧，半腱肌腱与半膜肌腱之间','中冲':'中指尖端中央',
+  '劳宫':'第2、3掌骨间，握拳时中指尖下','大陵':'腕掌侧横纹中点，掌长肌腱与桡侧腕屈肌腱之间',
+  '间使':'腕掌侧横纹上3寸，掌长肌腱与桡侧腕屈肌腱之间','曲泽':'肘横纹中，肱二头肌腱尺侧缘凹陷处',
+  '公孙':'第1跖骨基底前下方赤白肉际处','内关':'腕掌侧横纹上2寸，掌长肌腱与桡侧腕屈肌腱之间',
+  '列缺':'腕掌侧横纹上1.5寸，两手虎口交叉食指尖尽处','照海':'内踝尖下1寸，内踝下缘凹陷处',
+  '申脉':'外踝尖直下方凹陷处','外关':'腕背横纹上2寸，尺骨与桡骨间隙中'
+};
+const pointLoc = p => POINT_LOC[p] || '（定位待查）';
+
+/* ================= 纳甲法 ================= */
+const NAJIA_POINTS = [
+  [['窍阴','胆经','井'],['前谷','小肠经','荥'],['陷谷','胃经','输'],['阳溪','大肠经','经'],['委中','膀胱经','合'],['液门','三焦经','纳三焦']],
+  [['大敦','肝经','井'],['少府','心经','荥'],['太白','脾经','输'],['经渠','肺经','经'],['阴谷','肾经','合'],['劳宫','心包经','纳包络']],
+  [['少泽','小肠经','井'],['内庭','胃经','荥'],['三间','大肠经','输'],['昆仑','膀胱经','经'],['阳陵泉','胆经','合'],['中渚','三焦经','纳三焦']],
+  [['少冲','心经','井'],['大都','脾经','荥'],['太渊','肺经','输'],['复溜','肾经','经'],['曲泉','肝经','合'],['大陵','心包经','纳包络']],
+  [['厉兑','胃经','井'],['二间','大肠经','荥'],['束骨','膀胱经','输'],['阳辅','胆经','经'],['小海','小肠经','合'],['支沟','三焦经','纳三焦']],
+  [['隐白','脾经','井'],['鱼际','肺经','荥'],['太溪','肾经','输'],['中封','肝经','经'],['少海','心经','合'],['间使','心包经','纳包络']],
+  [['商阳','大肠经','井'],['通谷','膀胱经','荥'],['临泣','胆经','输'],['阳谷','小肠经','经'],['足三里','胃经','合'],['天井','三焦经','纳三焦']],
+  [['少商','肺经','井'],['然谷','肾经','荥'],['太冲','肝经','输'],['灵道','心经','经'],['阴陵泉','脾经','合'],['曲泽','心包经','纳包络']],
+  [['至阴','膀胱经','井'],['侠溪','胆经','荥'],['后溪','小肠经','输'],['解溪','胃经','经'],['曲池','大肠经','合'],['关冲','三焦经','纳三焦']],
+  [['涌泉','肾经','井'],['行间','肝经','荥'],['神门','心经','输'],['商丘','脾经','经'],['尺泽','肺经','合'],['中冲','心包经','纳包络']]
+];
+const GAN_YUAN = {0:'丘墟',1:'太冲',2:'腕骨',3:'神门',4:'冲阳',5:'太白',6:'合谷',7:'太渊',8:'京骨',9:'太溪'};
+const NAJIA_MAP = {};
+(function(){
+  const Z0 = [10,9,8,7,6,5,4,3,2,11];
+  for (let r = 0; r < 10; r++){
+    const startH = mod(2*Z0[r] - 1, 24);
+    for (let i = 0; i < 6; i++){
+      const z = mod(Z0[r] + 2*i, 12);
+      const g = mod(r + 2*i, 10);
+      const clock = mod(startH + 4*i, 24);
+      const dayG = (clock >= 23 || clock < startH) ? mod(r + 1, 10) : r;
+      const pt = NAJIA_POINTS[r][i];
+      NAJIA_MAP[dayG + ',' + g + ',' + z] = {point: pt[0], meridian: pt[1], type: pt[2],
+                                             yuan: (pt[2] === '输') ? GAN_YUAN[r] : null};
+    }
+  }
+})();
+function najiaOpen(dayStem0, hStem, hBranch){
+  return NAJIA_MAP[dayStem0 + ',' + hStem + ',' + hBranch] || null;
+}
+function najiaHeRi(dayStem0, hStem, hBranch){
+  return NAJIA_MAP[mod(dayStem0 + 5, 10) + ',' + hStem + ',' + hBranch] || null;
+}
+
+/* ================= 纳子法 ================= */
+const NAZI = [
+  {mer:'胆经',  jing:'本穴:足临泣', yuan:'丘墟', mu:'侠溪(荥水·补)', zi:'阳辅(经火·泻)'},
+  {mer:'肝经',  jing:'本穴:大敦',   yuan:'太冲', mu:'曲泉(合水·补)', zi:'行间(荥火·泻)'},
+  {mer:'肺经',  jing:'本穴:经渠',   yuan:'太渊', mu:'太渊(输土·补)', zi:'尺泽(合水·泻)'},
+  {mer:'大肠经', jing:'本穴:商阳',  yuan:'合谷', mu:'曲池(合土·补)', zi:'二间(荥水·泻)'},
+  {mer:'胃经',  jing:'本穴:足三里', yuan:'冲阳', mu:'解溪(经火·补)', zi:'厉兑(井金·泻)'},
+  {mer:'脾经',  jing:'本穴:太白',   yuan:'太白', mu:'大都(荥火·补)', zi:'商丘(经金·泻)'},
+  {mer:'心经',  jing:'本穴:少府',   yuan:'神门', mu:'少冲(井木·补)', zi:'神门(输土·泻)'},
+  {mer:'小肠经', jing:'本穴:阳谷',  yuan:'腕骨', mu:'后溪(输木·补)', zi:'小海(合土·泻)'},
+  {mer:'膀胱经', jing:'本穴:通谷',  yuan:'京骨', mu:'至阴(井金·补)', zi:'束骨(输木·泻)'},
+  {mer:'肾经',  jing:'本穴:阴谷',   yuan:'太溪', mu:'复溜(经金·补)', zi:'涌泉(井木·泻)'},
+  {mer:'心包经', jing:'本穴:劳宫',  yuan:'大陵', mu:'中冲(井木·补)', zi:'大陵(输土·泻)'},
+  {mer:'三焦经', jing:'本穴:支沟',  yuan:'阳池', mu:'中渚(输木·补)', zi:'天井(合土·泻)'}
+];
+
+/* ================= 灵龟八法 ================= */
+const LG_DAY_GAN = {0:10,1:9,3:8,4:7,2:7,5:10,6:9,8:8,9:7,7:7};
+const LG_DAY_ZHI = {0:7,1:10,2:8,3:8,4:10,5:7,6:7,7:10,8:9,9:9,10:10,11:7};
+const LG_HOUR_GAN = {0:9,1:8,2:7,3:6,4:5,5:9,6:8,7:7,8:6,9:5};
+const LG_HOUR_ZHI = {0:9,1:8,2:7,3:6,4:5,5:4,6:9,7:8,8:7,9:6,10:5,11:4};
+const LG_GUA = {1:['坎','申脉','阳跷'],2:['坤','照海','阴跷'],3:['震','外关','阳维'],4:['巽','临泣','带脉'],
+                5:['坤','照海','阴跷'],6:['乾','公孙','冲脉'],7:['兑','后溪','督脉'],8:['艮','内关','阴维'],
+                9:['离','列缺','任脉']};
+const LG_PEIDUI = {'公孙':'内关','内关':'公孙','后溪':'申脉','申脉':'后溪','临泣':'外关','外关':'临泣','列缺':'照海','照海':'列缺'};
+const LG_PEIDUI_MAI = {'公孙':'冲脉','内关':'阴维','后溪':'督脉','申脉':'阳跷','临泣':'带脉','外关':'阳维','列缺':'任脉','照海':'阴跷'};
+
+function lingguiOpen(dayG, hStem, hBranch, opts){
+  const dG = mod(dayG,10), dZ = mod(dayG,12);
+  const dayBase = LG_DAY_GAN[dG] + LG_DAY_ZHI[dZ];
+  const hourBase = LG_HOUR_GAN[hStem] + LG_HOUR_ZHI[hBranch];
+  const sum = dayBase + hourBase;
+  const yangDay = (dG % 2 === 0);
+  const div = yangDay ? 9 : 6;
+  let rem = sum % div; if (rem === 0) rem = div;
+
+  /* 余数5 处理 */
+  let effectiveRem = rem;
+  let note = '';
+  if (rem === 5){
+    if (opts && opts.fiveMode === 'gender'){
+      if (opts.sex === 'female'){
+        effectiveRem = 8;
+        note = '余数5：按「女寄艮」处理，取内关。';
+      } else {
+        effectiveRem = 2;
+        note = '余数5：按「男寄坤」处理，取照海。';
+      }
+    } else {
+      effectiveRem = 2;
+      note = '余数5：按「中宫寄坤」处理，取照海。';
+    }
+  }
+  const gua = LG_GUA[effectiveRem];
+  return {dayBase, hourBase, sum, div, rem, effectiveRem, gua, note,
+          peidui: LG_PEIDUI[gua[1]], peiduiMai: LG_PEIDUI_MAI[gua[1]] || '', yangDay,
+          step: '日基数（' + GAN[dG] + '=' + LG_DAY_GAN[dG] + ' + ' + ZHI[dZ] + '=' + LG_DAY_ZHI[dZ] + '）＝' + dayBase +
+                '；时基数（' + GAN[hStem] + '=' + LG_HOUR_GAN[hStem] + ' + ' + ZHI[hBranch] + '=' + LG_HOUR_ZHI[hBranch] + '）＝' + hourBase +
+                '；和＝' + sum + '；' + (yangDay ? '阳日' : '阴日') + ' ÷ ' + div + ' 余 ' + rem};
+}
+
+/* ================= 飞腾八法 ================= */
+const FEITENG = {
+  0:['乾','公孙'],8:['乾','公孙'],
+  1:['坤','申脉'],9:['坤','申脉'],
+  2:['艮','内关'],3:['兑','照海'],4:['坎','临泣'],5:['离','列缺'],6:['震','外关'],7:['巽','后溪']
+};
+
+/* ================= 五门十变 ================= */
+const WM_HEHUA = [
+  {a:'甲', b:'己', wx:'土', jm:'甲胆·己脾'},
+  {a:'乙', b:'庚', wx:'金', jm:'乙肝·庚大肠'},
+  {a:'丙', b:'辛', wx:'水', jm:'丙小肠·辛肺'},
+  {a:'丁', b:'壬', wx:'木', jm:'丁心·壬膀胱'},
+  {a:'戊', b:'癸', wx:'火', jm:'戊胃·癸肾'}
+];
+const WM_MAP = {'甲':'己','己':'甲','乙':'庚','庚':'乙','丙':'辛','辛':'丙','丁':'壬','壬':'丁','戊':'癸','癸':'戊'};
+
+/* ================= 五运六气 ================= */
+const YUN_BY_GAN = {0:'土',1:'金',2:'水',3:'木',4:'火',5:'土',6:'金',7:'水',8:'木',9:'火'};
+const YUN_YIN = ['角','徵','宫','商','羽'];
+const SI_TIAN_BY_ZHI = {
+  0:['少阴君火','火'],6:['少阴君火','火'],
+  1:['太阴湿土','土'],7:['太阴湿土','土'],
+  2:['少阳相火','火'],8:['少阳相火','火'],
+  3:['阳明燥金','金'],9:['阳明燥金','金'],
+  4:['太阳寒水','水'],10:['太阳寒水','水'],
+  5:['厥阴风木','木'],11:['厥阴风木','木']
+};
+const ZAI_QUAN = {0:'阳明燥金',1:'太阳寒水',2:'厥阴风木',3:'少阴君火',4:'太阴湿土',5:'少阳相火',
+                  6:'阳明燥金',7:'太阳寒水',8:'厥阴风木',9:'少阴君火',10:'太阴湿土',11:'少阳相火'};
+const QI_SEQ = ['厥阴风木','少阴君火','太阴湿土','少阳相火','阳明燥金','太阳寒水'];
+const QI_WX = {'厥阴风木':'木','少阴君火':'火','太阴湿土':'土','少阳相火':'火','阳明燥金':'金','太阳寒水':'水'};
+const ZHI_WX = {0:'水',1:'土',2:'木',3:'木',4:'土',5:'火',6:'火',7:'土',8:'金',9:'金',10:'土',11:'水'};
+const ZHU_QI = [
+  {name:'初之气', qi:'厥阴风木', from:'大寒', to:'春分'},
+  {name:'二之气', qi:'少阴君火', from:'春分', to:'小满'},
+  {name:'三之气', qi:'少阳相火', from:'小满', to:'大暑'},
+  {name:'四之气', qi:'太阴湿土', from:'大暑', to:'秋分'},
+  {name:'五之气', qi:'阳明燥金', from:'秋分', to:'小雪'},
+  {name:'终之气', qi:'太阳寒水', from:'小雪', to:'大寒'}
+];
+const YUN_BING = {
+  '木太过':'风气流行，脾土受邪：易病飧泄、肠鸣、胁痛、善怒、眩晕',
+  '火太过':'炎暑流行，肺金受邪：易病咳喘、血溢、咽干、心烦、身热',
+  '土太过':'雨湿流行，肾水受邪：易病腹满、体重、足痿、饮病、濡泻',
+  '金太过':'燥气流行，肝木受邪：易病胁痛、目赤、咳逆、少腹引痛',
+  '水太过':'寒气流行，心火受邪：易病心痛、心悸、寒厥、烦躁、癫疾',
+  '木不及':'燥乃大行，肝木受邪（金乘）：易病胁痛、目疾、筋脉拘急',
+  '火不及':'寒乃大行，心火受邪（水乘）：易病心痛、胸痹、寒中、身重',
+  '土不及':'风乃大行，脾土受邪（木乘）：易病飧泄、霍乱、腹满、体重',
+  '金不及':'炎火乃行，肺金受邪（火乘）：易病咳喘、鼽嚏、血泄、肩背痛',
+  '水不及':'湿乃大行，肾水受邪（土乘）：易病溏泄、腰痛、烦闷、足痿'
+};
+const SI_TIAN_BING = {
+  '少阴君火':'热气淫胜，肺金受病：易病咳喘、血溢、心痛、咽干、目赤',
+  '太阴湿土':'湿气淫胜，肾水受病：易病腹满、水肿、濡泄、体重、足痿',
+  '少阳相火':'火气淫胜，肺金受病：易病咳逆、衄血、疟疾、耳聋、目赤',
+  '阳明燥金':'燥气淫胜，肝木受病：易病胁痛、目赤、疝痛、皮毛干燥',
+  '太阳寒水':'寒气淫胜，心火受病：易病心痛、寒厥、心悸、呕逆、善忘',
+  '厥阴风木':'风气淫胜，脾土受病：易病飧泄、腹痛、呕吐、胁痛、善怒'
+};
+const QI_BING = {
+  '厥阴风木':'风气当令：易病风证、肝胆、筋脉、目眩、胁痛',
+  '少阴君火':'热气当令：易病心系、热证、咽干、心烦、失眠',
+  '太阴湿土':'湿气当令：易病脾胃、湿证、腹胀、身重、泄泻',
+  '少阳相火':'火气当令：易病暑热、心包三焦、口苦、目赤',
+  '阳明燥金':'燥气当令：易病肺系、燥证、咳喘、便秘、皮肤干',
+  '太阳寒水':'寒气当令：易病肾系、寒证、腰痛、畏寒、关节痛'
+};
+function yunqiYearData(y){
+  const yG = mod(y - 1984, 60);
+  const gan = mod(yG, 10), zhi = mod(yG, 12);
+  const yun = YUN_BY_GAN[gan];
+  const taiGuo = (gan % 2 === 0);
+  const siTian = SI_TIAN_BY_ZHI[zhi];
+  const zaiQuan = ZAI_QUAN[zhi];
+  const zaiQuanWx = QI_WX[zaiQuan];
+  const ke = {木:'金',火:'水',土:'木',金:'火',水:'土'};
+  const isTianFu = yun === siTian[1];
+  const isSuiHui = yun === ZHI_WX[zhi] && ![2,5,8,11].includes(zhi);
+  const isTaiYi = isTianFu && isSuiHui && gan !== 1;
+  const zaiQuanSame = (yun === zaiQuanWx) && !(yun === '火' && zaiQuan === '少阴君火');
+  const isTongTianFu = taiGuo && zaiQuanSame;
+  const isTongSuiHui = !taiGuo && zaiQuanSame;
+  const isPingQi = (taiGuo && ke[yun] === siTian[1]) || (!taiGuo && yun === siTian[1]);
+  const tags = [];
+  if (isTaiYi) tags.push('太一天符');
+  if (isTianFu) tags.push('天符');
+  if (isSuiHui) tags.push('岁会');
+  if (isTongTianFu) tags.push('同天符');
+  if (isTongSuiHui) tags.push('同岁会');
+  if (isPingQi) tags.push('平气');
+  const cat = tags.length ? tags.join('·') : (taiGuo ? '岁运太过' : '岁运不及');
+  const zhuYun = [];
+  let shao = !taiGuo;
+  for (let i = 0; i < 5; i++){ zhuYun.push({wx: WX[i], yin: YUN_YIN[i], tai: !shao}); shao = !shao; }
+  const keYun = [];
+  shao = !taiGuo;
+  let wxIdx = WX.indexOf(yun);
+  for (let i = 0; i < 5; i++){
+    keYun.push({wx: WX[mod(wxIdx + i, 5)], yin: YUN_YIN[mod(wxIdx + i, 5)], tai: !shao});
+    shao = !shao;
+  }
+  const sIdx = QI_SEQ.indexOf(siTian[0]);
+  const keQi = [];
+  for (let i = 0; i < 6; i++) keQi.push(QI_SEQ[mod(sIdx + i + 4, 6)]);
+  const jiaLin = ZHU_QI.map((zq, i) => {
+    const kq = keQi[i], kw = QI_WX[kq], zw = QI_WX[zq.qi];
+    let judge;
+    if (kw === zw) judge = '同气相得';
+    else if ((kw === '木' && zw === '土') || (kw === '火' && zw === '金') || (kw === '土' && zw === '水') ||
+             (kw === '金' && zw === '木') || (kw === '水' && zw === '火')) judge = '客克主·顺（相得）';
+    else if ((zw === '木' && kw === '土') || (zw === '火' && kw === '金') || (zw === '土' && kw === '水') ||
+             (zw === '金' && kw === '木') || (zw === '水' && kw === '火')) judge = '主克客·逆（不相得）';
+    else judge = '相生·相得';
+    return {zq, kq, judge};
+  });
+  return {y, yG, gan, zhi, ganName: GAN[gan], zhiName: ZHI[zhi], yun, taiGuo, siTian, zaiQuan, cat,
+          isTianFu, isTaiYi, isSuiHui, isTongTianFu, isTongSuiHui, isPingQi,
+          zhuYun, keYun, keQi, jiaLin, shengxiao: SHENGXIAO[zhi],
+          yunBing: YUN_BING[yun + (taiGuo ? '太过' : '不及')],
+          siTianBing: SI_TIAN_BING[siTian[0]]};
+}
+function currentQiStep(yunqiY, ms){
+  const bounds = [
+    solarTermTimeMs(yunqiY, 300),
+    solarTermTimeMs(yunqiY, 0),
+    solarTermTimeMs(yunqiY, 60),
+    solarTermTimeMs(yunqiY, 120),
+    solarTermTimeMs(yunqiY, 180),
+    solarTermTimeMs(yunqiY, 240)
+  ];
+  let step = 5;
+  if (ms < bounds[0]) { step = 5; }
+  else for (let i = 0; i < 6; i++){
+    const next = (i === 5) ? solarTermTimeMs(yunqiY + 1, 300) : bounds[i + 1];
+    if (ms >= bounds[i] && ms < next){ step = i; break; }
+  }
+  return step;
+}
+
+/* ================= 综合计算 ================= */
+function calcAll(d, opts){
+  opts = opts || {lateZiNextDay:true, fiveMode:'kun', sex:'male'};
+  const y = d.getFullYear(), mo = d.getMonth() + 1, da = d.getDate();
+  const h = d.getHours(), mi = d.getMinutes();
+  const d0 = dayGanzhiIndex(y, mo, da);
+  const dayG = (opts.lateZiNextDay && h >= 23) ? mod(d0 + 1, 60) : d0;
+  const dg = mod(dayG, 10), dz = mod(dayG, 12);
+  const hb = hourBranchIdx(h);
+  const hs = hourStem(dg, hb);
+  /* 月支 */
+  let mb = 10;
+  const JIE_L = [315,345,15,45,75,105,135,165,195,225,255];
+  const nowMs = d.getTime();
+  for (let i = 0; i < 11; i++){
+    if (solarTermTimeMs(y, JIE_L[i]) <= nowMs) mb = i;
+  }
+  const xhMs = solarTermTimeMs(y, 285), lcMs = solarTermTimeMs(y, 315);
+  if (xhMs <= nowMs && nowMs < lcMs) mb = 11;
+  /* 年干支 */
+  const lichunMs = solarTermTimeMs(y, 315);
+  const yyGan = mod(y - 1984, 60);
+  const yg = (nowMs >= lichunMs) ? mod(yyGan, 10) : mod(yyGan - 1, 10);
+  const yz = (nowMs >= lichunMs) ? mod(yyGan, 12) : mod(yyGan - 1, 12);
+  const mg = monthStem(yg, mb);
+  const lunar = lunarInfo(y, mo, da);
+  /* 各法开穴 */
+  const nj = najiaOpen(dg, hs, hb);
+  const njHeRi = nj ? null : najiaHeRi(dg, hs, hb);
+  const nz = NAZI[hb];
+  const lg = lingguiOpen(dayG, hs, hb, opts);
+  const ft = FEITENG[hs];
+  const wm = WM_HEHUA.find(x => x.a === GAN[dg] || x.b === GAN[dg]);
+  const yunqiY = (nowMs >= lichunMs) ? y : y - 1;
+  const yq = yunqiYearData(yunqiY);
+  const curStep = currentQiStep(y, nowMs);
+  const todayTerm = TERMS.filter(t => {
+    const ms = solarTermTimeMs(y, t.l);
+    const dd = new Date(ms);
+    return dd.getFullYear() === y && dd.getMonth() + 1 === mo && dd.getDate() === da;
+  }).map(t => t.n);
+  return {y, mo, da, h, mi, d0, dayG, dg, dz, hb, hs, mb, mg, yg, yz, lunar, nj, njHeRi, nz, lg, ft, wm,
+          yunqiY, yq, curStep, todayTerm, ganName: GAN[dg], zhiName: ZHI[dz],
+          hourGanziName: GAN[hs] + ZHI[hb], dayGanziName: ganziName(dayG),
+          yearGanziName: ganziName((nowMs >= lichunMs) ? yyGan : mod(yyGan - 1, 60)),
+          monthGanziName: GAN[mg] + ZHI[mod(mb + 2, 12)]};
+}
+function dayTable(d, opts){
+  opts = opts || {lateZiNextDay:true, fiveMode:'kun', sex:'male'};
+  const y = d.getFullYear(), mo = d.getMonth() + 1, da = d.getDate();
+  const d0 = dayGanzhiIndex(y, mo, da);
+  const dayG = (opts.lateZiNextDay && d.getHours() >= 23) ? mod(d0 + 1, 60) : d0;
+  const dg = mod(dayG, 10);
+  const rows = [];
+  for (let b = 0; b < 12; b++){
+    const hs2 = hourStem(dg, b);
+    const nj2 = najiaOpen(dg, hs2, b);
+    const nj2hr = nj2 ? null : najiaHeRi(dg, hs2, b);
+    const lg2 = lingguiOpen(dayG, hs2, b, opts);
+    const ft2 = FEITENG[hs2];
+    const startH = mod(b * 2 - 1, 24);
+    rows.push({b, hs: hs2, startH, nj: nj2, njHeRi: nj2hr, lg: lg2, ft: ft2});
+  }
+  return {dg, rows};
+}
+
+/* ================= UI ================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hourSpan = h => { const s = mod(h - 1, 24); return pad2(s) + ':00–' + pad2((s + 2) % 24) + ':00'; };
+
+const state = { follow: true, sel: new Date(), calY: null, calM: null, yqY: null };
+let lastText = '';
+
+function getOpts(){
+  return {
+    lateZiNextDay: $('optLateZi').checked,
+    fiveMode: $('optFive').value,
+    sex: $('optSex').value,
+    autoRefresh: $('optAuto').checked
+  };
+}
+
+/* Tab 切换 */
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('section.tab').forEach(s => s.classList.remove('active'));
+    $('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'cal') renderCalendar();
+    if (btn.dataset.tab === 'yunqi') renderYunqi();
+    if (btn.dataset.tab === 'wumen') renderWumen();
+    if (btn.dataset.tab === 'about') renderAbout();
+  });
+});
+
+/* 时钟 */
+function tick(){
+  const now = new Date();
+  $('clockTime').textContent = pad2(now.getHours()) + ':' + pad2(now.getMinutes()) + ':' + pad2(now.getSeconds());
+  const c = calcAll(now, getOpts());
+  $('clockGanzi').textContent = c.dayGanziName + ' ' + c.hourGanziName + '时';
+  if (state.follow){
+    state.sel = now;
+    if (now.getSeconds() === 0 || !$('ganzhiSummary').innerHTML){
+      renderOpen();
+    }
+  }
+}
+setInterval(tick, 1000);
+
+/* 自动刷新（每分钟） */
+let autoTimer = null;
+function startAuto(){
+  stopAuto();
+  if ($('optAuto').checked) autoTimer = setInterval(() => { if (state.follow) renderOpen(); }, 60000);
+}
+function stopAuto(){ if (autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
+
+/* 控件 */
+$('optFollow').addEventListener('change', e => {
+  state.follow = e.target.checked;
+  if (state.follow){ state.sel = new Date(); renderOpen(); }
+});
+$('btnNow').addEventListener('click', () => {
+  state.follow = true; $('optFollow').checked = true;
+  state.sel = new Date(); renderOpen();
+});
+$('optLateZi').addEventListener('change', renderOpen);
+$('optFive').addEventListener('change', () => { updateSexVisibility(); renderOpen(); });
+$('optSex').addEventListener('change', renderOpen);
+$('optAuto').addEventListener('change', () => {
+  if ($('optAuto').checked){ startAuto(); if (state.follow) renderOpen(); }
+  else stopAuto();
+});
+$('dateInput').addEventListener('change', e => {
+  state.follow = false; $('optFollow').checked = false;
+  const [yy, mm, dd] = e.target.value.split('-').map(Number);
+  const t = new Date(state.sel);
+  state.sel = new Date(yy, mm - 1, dd, t.getHours(), t.getMinutes());
+  renderOpen();
+});
+$('timeInput').addEventListener('change', e => {
+  state.follow = false; $('optFollow').checked = false;
+  const [hh, mm] = e.target.value.split(':').map(Number);
+  const t = new Date(state.sel);
+  state.sel = new Date(t.getFullYear(), t.getMonth(), t.getDate(), hh, mm);
+  renderOpen();
+});
+
+function updateSexVisibility(){
+  const genderMode = $('optFive').value === 'gender';
+  $('optSex').disabled = !genderMode;
+  $('sexOptBox').classList.toggle('disabled', !genderMode);
+}
+
+/* 复制 & 打印 */
+$('btnPrint').addEventListener('click', () => window.print());
+$('btnCopy').addEventListener('click', async () => {
+  if (!lastText){ renderOpen(); }
+  if (!lastText) return;
+  try {
+    if (navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(lastText);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = lastText;
+      ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    showToast('✓ 已复制到剪贴板');
+  } catch (err){
+    showToast('✗ 复制失败，请手动选择结果复制');
+  }
+});
+let toastTimer = null;
+function showToast(msg){
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+/* ---------- 结果文本构造（供复制用） ---------- */
+function buildResultText(c, opts){
+  const lines = [];
+  lines.push('中医时辰开穴 · 结果');
+  lines.push('========================================');
+  lines.push('时间：' + c.y + '-' + pad2(c.mo) + '-' + pad2(c.da) + ' ' + pad2(c.h) + ':' + pad2(c.mi) + '（本地时间）');
+  lines.push('农历：' + c.lunar.lunarYear + '年 ' + c.lunar.monthName + ' ' + c.lunar.dayName);
+  lines.push('年干支：' + c.yearGanziName + '年（' + c.yq.shengxiao + '）');
+  lines.push('月干支：' + c.monthGanziName + '月');
+  lines.push('日干支：' + c.dayGanziName + '日' + (opts.lateZiNextDay && c.h >= 23 ? '（23:00后按次日）' : ''));
+  lines.push('时干支：' + c.hourGanziName + '时（' + ZHI[c.hb] + '时 ' + hourSpan(c.h) + '）');
+  if (c.todayTerm.length) lines.push('今日节气：' + c.todayTerm.join('、'));
+  lines.push('');
+  lines.push('【开穴汇总】');
+  if (c.lg) {
+    lines.push('  灵龟八法·主穴：' + c.lg.gua[1] + '（' + c.lg.gua[2] + '·' + c.lg.gua[0] + '卦' + c.lg.effectiveRem + '）');
+    lines.push('  灵龟八法·配穴：' + c.lg.peidui + '（' + c.lg.peiduiMai + '）');
+  }
+  if (c.nj){
+    lines.push('  纳甲开穴：' + c.nj.point + '（' + c.nj.meridian + '·' + c.nj.type + '）');
+    if (c.nj.yuan) lines.push('  纳甲返本还原：' + c.nj.yuan + '（原穴）');
+  } else if (c.njHeRi){
+    lines.push('  纳甲合日互用：' + c.njHeRi.point + '（' + c.njHeRi.meridian + '·' + c.njHeRi.type + '）');
+  } else {
+    lines.push('  纳甲开穴：本时辰无开穴（可参考合日互用，本时辰亦无）');
+  }
+  lines.push('  飞腾八法：' + c.ft[1] + '（卦' + c.ft[0] + '）');
+  lines.push('  纳子补穴（虚）：' + c.nz.mu.split('(')[0] + '（' + c.nz.mer + '）');
+  lines.push('  纳子泻穴（实）：' + c.nz.zi.split('(')[0] + '（' + c.nz.mer + '）');
+  lines.push('');
+  lines.push('【灵龟八法】');
+  lines.push('  ' + c.lg.step);
+  lines.push('  九宫：' + c.lg.gua[0] + '卦 · ' + c.lg.gua[1] + '（' + c.lg.gua[2] + '）');
+  lines.push('  配穴：' + c.lg.peidui + '（' + c.lg.peiduiMai + '）');
+  if (c.lg.note) lines.push('  备注：' + c.lg.note);
+  lines.push('  定位：' + c.lg.gua[1] + ' → ' + pointLoc(c.lg.gua[1]));
+  lines.push('        ' + c.lg.peidui + ' → ' + pointLoc(c.lg.peidui));
+  lines.push('');
+  lines.push('【纳子法】');
+  lines.push('  ' + ZHI[c.hb] + '时（' + hourSpan(c.h) + '）气血流注 ' + c.nz.mer);
+  lines.push('  本穴：' + c.nz.jing.split(':')[1] + '；原穴：' + c.nz.yuan);
+  lines.push('  虚则补其母：' + c.nz.mu);
+  lines.push('  实则泻其子：' + c.nz.zi);
+  lines.push('');
+  lines.push('【纳甲法】');
+  lines.push('  ' + c.dayGanziName + '日 ' + c.hourGanziName + '时');
+  if (c.nj){
+    lines.push('  开穴：' + c.nj.point + '（' + c.nj.meridian + '·' + c.nj.type + '）');
+    if (c.nj.yuan) lines.push('  返本还原：' + c.nj.yuan);
+  } else if (c.njHeRi){
+    lines.push('  本时辰本日无开穴，合日互用（' + GAN[c.dg] + '⇄' + WM_MAP[GAN[c.dg]] + '）：');
+    lines.push('  ' + c.njHeRi.point + '（' + c.njHeRi.meridian + '·' + c.njHeRi.type + '）');
+  } else {
+    lines.push('  本时辰无开穴，合日亦无');
+  }
+  lines.push('');
+  lines.push('【飞腾八法】');
+  lines.push('  时干' + GAN[c.hs] + ' → ' + c.ft[0] + '卦 · ' + c.ft[1]);
+  lines.push('');
+  lines.push('【五门十变】');
+  const wmOther = c.wm.a === GAN[c.dg] ? c.wm.b : c.wm.a;
+  lines.push('  本日' + GAN[c.dg] + '日，合化：' + GAN[c.dg] + '⇄' + wmOther + '化' + c.wm.wx);
+  lines.push('  夫妻经：' + c.wm.jm);
+  lines.push('');
+  lines.push('【五运六气】');
+  lines.push('  运气年：' + c.yq.ganName + c.yq.zhiName + '年（' + c.yq.shengxiao + '）');
+  lines.push('  岁运（中运）：' + c.yq.yun + '运' + (c.yq.taiGuo ? '太过' : '不及') + '　' + c.yq.cat);
+  lines.push('  司天：' + c.yq.siTian[0] + '；在泉：' + c.yq.zaiQuan);
+  lines.push('  当前：' + ZHU_QI[c.curStep].name + ' · ' + c.yq.keQi[c.curStep] + '（' + ZHU_QI[c.curStep].from + '—' + ZHU_QI[c.curStep].to + '）');
+  lines.push('  ' + c.yq.siTianBing);
+  lines.push('  ' + c.yq.yunBing);
+  lines.push('');
+  lines.push('---');
+  lines.push('本工具仅供中医理论学习参考，不构成医疗建议。');
+  lines.push('穴位定位为教材标准取法；针刺请由专业医师操作。');
+  return lines.join('\n');
+}
+
+/* ---------- 即时开穴渲染 ---------- */
+function pointChip(pt, extra){
+  return '<span class="point-chip" title="' + esc(pointLoc(pt.point)) + '"><b>' + esc(pt.point) + '</b>（' +
+         esc(pt.meridian.replace('经','')) + (pt.type ? '·' + esc(pt.type) : '') + '）' + extra + '</span>';
+}
+function typeName(t){
+  return {井:'井穴',荥:'荥穴',输:'输穴',经:'经穴',合:'合穴',
+          '纳三焦':'气纳三焦', '纳包络':'血纳包络'}[t] || t;
+}
+function badgeCls(f){
+  if (f.indexOf('纳甲') >= 0) return 'nj';
+  if (f.indexOf('纳子') >= 0) return 'nz';
+  if (f.indexOf('灵龟') >= 0) return 'lg';
+  if (f.indexOf('飞腾') >= 0) return 'ft';
+  return 'wm';
+}
+
+function renderOpen(){
+  const opts = getOpts();
+  const c = calcAll(state.sel, opts);
+  $('dateInput').value = c.y + '-' + pad2(c.mo) + '-' + pad2(c.da);
+  $('timeInput').value = pad2(c.h) + ':' + pad2(c.mi);
+
+  /* 保存复制文本 */
+  lastText = buildResultText(c, opts);
+
+  /* 干支摘要 */
+  const lunarTxt = c.lunar.lunarYear + '年 ' + c.lunar.monthName + ' ' + c.lunar.dayName;
+  $('ganzhiSummary').innerHTML =
+    '<h3>📜 当下干支 <span class="tag">' + esc(c.dayGanziName) + '日</span></h3>' +
+    '<div class="flex" style="gap:14px;flex-wrap:wrap">' +
+    '<div><span class="small">公历</span><br><b>' + c.y + '年' + c.mo + '月' + c.da + '日 ' + pad2(c.h) + ':' + pad2(c.mi) + '</b></div>' +
+    '<div><span class="small">农历</span><br><b>' + esc(lunarTxt) + '</b></div>' +
+    '<div><span class="small">年干支</span><br><b>' + esc(c.yearGanziName) + '年（' + esc(c.yq.shengxiao) + '）</b></div>' +
+    '<div><span class="small">月干支</span><br><b>' + esc(c.monthGanziName) + '月</b></div>' +
+    '<div><span class="small">日干支</span><br><b>' + esc(c.dayGanziName) + '日</b></div>' +
+    '<div><span class="small">时干支</span><br><b>' + esc(c.hourGanziName) + '时（' + esc(ZHI[c.hb]) + '时 ' + esc(hourSpan(c.h)) + '）</b></div>' +
+    '</div>' +
+    (c.todayTerm.length ? '<div class="note">今日节气：' + esc(c.todayTerm.join('、')) + '</div>' : '') +
+    (c.h >= 23 && opts.lateZiNextDay ? '<div class="note">现已入子时，按子时换日，日干支按<b>' + esc(c.dayGanziName) + '日</b>计算。</div>' : '') +
+    (c.h >= 23 && !opts.lateZiNextDay ? '<div class="note">现已入子时，但「23:00后子时按次日干支」已关闭，仍按<b>' + esc(c.dayGanziName) + '日</b>计算。</div>' : '');
+
+  /* 汇总 */
+  const pts = [];
+  if (c.lg){
+    pts.push({p: c.lg.gua[1], m: c.lg.gua[2], f: '灵龟八法·主穴', n: '九宫' + c.lg.gua[0] + '·余' + c.lg.effectiveRem});
+    pts.push({p: c.lg.peidui, m: c.lg.peiduiMai, f: '灵龟八法·配穴', n: '相配'});
+  }
+  if (c.nj){
+    pts.push({p: c.nj.point, m: c.nj.meridian, f: '子午流注·纳甲', n: c.nj.type});
+    if (c.nj.yuan) pts.push({p: c.nj.yuan, m: c.nj.meridian, f: '纳甲·返本还原', n: '原穴'});
+  } else if (c.njHeRi){
+    pts.push({p: c.njHeRi.point, m: c.njHeRi.meridian, f: '纳甲·合日互用', n: '互用·' + c.njHeRi.type});
+  }
+  if (c.ft) pts.push({p: c.ft[1], m: LG_PEIDUI_MAI[c.ft[1]] || '', f: '飞腾八法', n: '卦' + c.ft[0]});
+  if (c.nz){
+    pts.push({p: c.nz.mu.split('(')[0], m: c.nz.mer, f: '纳子·虚则补母', n: '补'});
+    pts.push({p: c.nz.zi.split('(')[0], m: c.nz.mer, f: '纳子·实则泻子', n: '泻'});
+  }
+  const seen = {};
+  const uniq = pts.filter(x => { const k = x.p + x.m; if (seen[k]) return false; seen[k] = true; return true; });
+
+  $('summaryCard').innerHTML =
+    '<h3>🎯 此刻宜针穴位 <span class="tag">共' + uniq.length + '穴</span></h3>' +
+    (uniq.length ? '<ul class="needle-list">' + uniq.map(x =>
+      '<li><div class="nm">' + esc(x.p) + '</div><div style="flex:1">' +
+      '<span class="badge ' + badgeCls(x.f) + '">' + esc(x.f) + '</span> ' + esc(x.n) +
+      '<div class="jm">' + esc((x.m || '').replace('经','')) + (x.m ? '经 · ' : '') + esc(pointLoc(x.p)) + '</div></div></li>'
+    ).join('') + '</ul>' : '<p class="small">本时辰各法均无开穴。</p>') +
+    '<p class="note">穴位定位为教材标准取法；针刺请由专业医师操作，补泻遵辨证。</p>';
+
+  /* 纳甲卡片 */
+  $('cardNajia').innerHTML =
+    '<h3>子午流注·纳甲法 <span class="tag nj">按时开穴</span></h3>' +
+    '<p class="calc-line">' + esc(c.dayGanziName) + '日 ' + esc(c.hourGanziName) + '时（五鼠遁：' + esc(GAN[c.dg]) + '日' + esc(ZHI[c.hb]) + '时起' + esc(GAN[mod(c.dg*2,10)]) + '子）</p>' +
+    (c.nj ?
+      '<div>' + pointChip(c.nj, '') +
+      (c.nj.yuan ? '<span class="point-chip" title="' + esc(pointLoc(c.nj.yuan)) + '"><b>' + esc(c.nj.yuan) + '</b>（' + esc(c.nj.meridian.replace('经','')) + '·原穴·返本还原）</span>' : '') + '</div>' +
+      '<p class="small">' + esc(c.nj.meridian) + ' · ' + esc(typeName(c.nj.type)) + (c.nj.yuan ? '，返本还原开' + esc(c.nj.meridian.replace('经','')) + '经原穴' + esc(c.nj.yuan) : '') + '</p>'
+      : (c.njHeRi ?
+        '<p>本时辰本日无开穴，<b>合日互用</b>（' + esc(GAN[c.dg]) + '⇄' + esc(WM_MAP[GAN[c.dg]]) + '）：' + pointChip(c.njHeRi, '') + '</p>' +
+        '<p class="small">' + esc(c.njHeRi.meridian) + ' · ' + esc(typeName(c.njHeRi.type)) + '（合日互用，夫妻穴法）</p>'
+        : '<p class="small">本时辰无纳甲开穴（阳日阴时/阴日阳时不穴，合日亦无）。</p>')) +
+    '<div class="note">阳日阳时开阳经穴、阴日阴时开阴经穴，经生经、穴生穴；返本还原，气纳三焦、血纳包络。</div>';
+
+  /* 纳子卡片 */
+  const nz = c.nz;
+  $('cardNazi').innerHTML =
+    '<h3>子午流注·纳子法 <span class="tag nz">十二经流注</span></h3>' +
+    '<p class="calc-line">' + esc(ZHI[c.hb]) + '时（' + esc(hourSpan(c.h)) + '）气血流注 <b>' + esc(nz.mer) + '</b></p>' +
+    '<table class="tbl"><tr><th>项目</th><th>穴位</th><th>应用</th></tr>' +
+    '<tr><td>本穴</td><td>' + esc(nz.jing.split(':')[1]) + '</td><td>本经病变常规</td></tr>' +
+    '<tr><td>原穴</td><td>' + esc(nz.yuan) + '</td><td>本经虚实证皆可</td></tr>' +
+    '<tr><td style="color:var(--green)">母穴（补）</td><td>' + esc(nz.mu) + '</td><td>虚则补其母</td></tr>' +
+    '<tr><td style="color:var(--red)">子穴（泻）</td><td>' + esc(nz.zi) + '</td><td>实则泻其子</td></tr>' +
+    '</table>' +
+    '<p class="note">纳子法按时辰取本经穴，虚补母、实泻子（需辨证虚实选用）。</p>';
+
+  /* 灵龟卡片 */
+  $('cardLinggui').innerHTML =
+    '<h3>灵龟八法 <span class="tag lg">奇经八脉</span></h3>' +
+    '<p class="calc-line">' + esc(c.lg.step) + '</p>' +
+    '<div class="flex">' +
+    '<span class="point-chip" title="' + esc(pointLoc(c.lg.gua[1])) + '"><b>' + esc(c.lg.gua[1]) + '</b>（主穴·' + esc(c.lg.gua[2]) + '·' + esc(c.lg.gua[0]) + '卦' + c.lg.effectiveRem + '）</span>' +
+    '<span class="point-chip" title="' + esc(pointLoc(c.lg.peidui)) + '"><b>' + esc(c.lg.peidui) + '</b>（配穴·' + esc(c.lg.peiduiMai) + '）</span>' +
+    '</div>' +
+    (c.lg.note ? '<p class="note">' + esc(c.lg.note) + '</p>' : '') +
+    '<p class="small">九宫：' + [1,2,3,4,5,6,7,8,9].map(k => k + ':' + LG_GUA[k][1]).join('　') + '</p>' +
+    '<div class="note">八法逐日/临时干支歌取基数，和数' + (c.lg.yangDay ? '阳日除九' : '阴日除六') + '，余数配九宫八卦开穴；主穴配穴相配（' + esc(c.lg.gua[1]) + '⇄' + esc(c.lg.peidui) + '）。</div>';
+
+  /* 飞腾卡片 */
+  $('cardFeiteng').innerHTML =
+    '<h3>飞腾八法 <span class="tag ft">按时干</span></h3>' +
+    '<p class="calc-line">时干' + esc(GAN[c.hs]) + ' → ' + esc(c.ft[0]) + '卦 · ' + esc(c.ft[1]) + '</p>' +
+    '<span class="point-chip" title="' + esc(pointLoc(c.ft[1])) + '"><b>' + esc(c.ft[1]) + '</b>（' + esc(LG_PEIDUI_MAI[c.ft[1]] || '') + '）</span>' +
+    '<div class="note">飞腾八法以时干查卦取穴（壬甲→乾·公孙、乙癸→坤·申脉、丙→艮·内关、丁→兑·照海、戊→坎·临泣、己→离·列缺、庚→震·外关、辛→巽·后溪）。</div>';
+
+  /* 五门十变卡片 */
+  const wmOther = c.wm.a === GAN[c.dg] ? c.wm.b : c.wm.a;
+  $('cardWumen').innerHTML =
+    '<h3>五门十变·合日互用 <span class="tag wm">夫妻穴</span></h3>' +
+    '<p class="calc-line">本日' + esc(GAN[c.dg]) + '日，合化：' + esc(GAN[c.dg]) + '⇄' + esc(wmOther) + '化' + esc(c.wm.wx) + '，夫妻经：' + esc(c.wm.jm) + '</p>' +
+    '<p class="small">' + esc(c.wm.jm) + '二经穴位可互用（合日互用）。' +
+    (c.nj ? '' : (c.njHeRi ? '本时辰已用合日之穴（见纳甲）。' : '本时辰合日亦无穴。')) + '</p>' +
+    '<div class="note">五门：甲己化土、乙庚化金、丙辛化水、丁壬化木、戊癸化火。</div>';
+
+  /* 五运六气 mini */
+  $('cardYunqiMini').innerHTML =
+    '<h3>五运六气 <span class="tag">' + esc(c.yq.ganName + c.yq.zhiName) + '年</span></h3>' +
+    '<p class="calc-line">岁运（中运）：<b>' + esc(c.yq.yun) + '运' + (c.yq.taiGuo ? '太过' : '不及') + '</b> · ' + esc(c.yq.cat) + '</p>' +
+    '<p class="calc-line">司天：<b>' + esc(c.yq.siTian[0]) + '</b> · 在泉：<b>' + esc(c.yq.zaiQuan) + '</b></p>' +
+    '<p class="small">当前：' + esc(c.yq.keQi[c.curStep]) + '（' + esc(ZHU_QI[c.curStep].from) + '—' + esc(ZHU_QI[c.curStep].to) + '）</p>' +
+    '<div class="note">详见「五运六气」页。</div>';
+
+  /* 当日十二时辰总表 */
+  const dt = dayTable(state.sel, opts);
+  $('cardDayTable').innerHTML =
+    '<h3>📋 ' + esc(c.dayGanziName) + '日十二时辰开穴总表 <span class="tag">提前安排下针</span></h3>' +
+    '<p class="small">日以子时（23:00）起算。' + (c.h >= 23 && opts.lateZiNextDay ? '当前时辰已按次日计算。' : '') + '</p>' +
+    '<div style="overflow-x:auto"><table class="tbl"><tr><th>时辰</th><th>钟表时间</th><th>时干支</th><th>纳甲开穴</th><th>灵龟八法</th><th>飞腾</th></tr>' +
+    dt.rows.map(r => {
+      const cur = (r.b === c.hb);
+      const njTxt = r.nj ? '<b>' + esc(r.nj.point) + '</b>' + (r.nj.yuan ? '+' + esc(r.nj.yuan) : '') : (r.njHeRi ? esc(r.njHeRi.point) + '（互用）' : '—');
+      const lgTxt = esc(r.lg.gua[1]) + '+' + esc(r.lg.peidui) + (r.lg.effectiveRem !== r.lg.rem ? '<sup>*</sup>' : '');
+      const ftTxt = esc(r.ft[1]);
+      return '<tr class="' + (cur ? 'cur' : '') + '"><td>' + esc(ZHI[r.b]) + '时</td><td>' + pad2(r.startH) + ':00–' + pad2(mod(r.startH + 2, 24)) + ':00</td>' +
+             '<td>' + esc(GAN[r.hs] + ZHI[r.b]) + '</td><td>' + njTxt + '</td><td>' + lgTxt + '</td><td>' + ftTxt + '</td></tr>';
+    }).join('') + '</table></div>' +
+    '<p class="note">灵龟八法显示主穴+配穴；纳甲含返本还原原穴（+穴）。<sup>*</sup>表示余5经寄宫调整。</p>';
+}
+
+/* ---------- 万年历 ---------- */
+function renderCalendar(){
+  const now = new Date();
+  const y = state.calY || now.getFullYear(), m = state.calM || now.getMonth();
+  state.calY = y; state.calM = m;
+  $('calTitle').textContent = y + '年' + (m + 1) + '月';
+  const first = new Date(y, m, 1);
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const mondayOffset = (first.getDay() + 6) % 7;
+  const opts = getOpts();
+  let html = '';
+  for (let i = 0; i < mondayOffset; i++) html += '<div class="cal-cell other"></div>';
+  for (let d = 1; d <= daysInMonth; d++){
+    const c = calcAll(new Date(y, m, d, 12), opts);
+    const isTerm = c.todayTerm.length;
+    const lunarDay = c.lunar.day === 1 ? c.lunar.monthName : c.lunar.dayName;
+    const today = (d === now.getDate() && m === now.getMonth() && y === now.getFullYear());
+    const sel = (state.sel.getFullYear() === y && state.sel.getMonth() === m && state.sel.getDate() === d);
+    const dow = new Date(y, m, d).getDay();
+    html += '<div class="cal-cell ' + (isTerm ? 'term' : '') + (today ? ' today' : '') + (sel ? ' selected' : '') +
+            (dow === 0 || dow === 6 ? ' weekend' : '') + '" data-d="' + d + '" data-m="' + m + '" data-y="' + y + '">' +
+            (isTerm ? '<span class="term-mark">' + esc(c.todayTerm[0]) + '</span>' : '') +
+            '<div class="d">' + d + '</div><div class="l">' + esc(isTerm ? c.todayTerm[0] : lunarDay) + '</div>' +
+            '<div class="gz">' + esc(c.dayGanziName) + '</div></div>';
+  }
+  $('calGrid').innerHTML = html;
+  document.querySelectorAll('.cal-cell[data-d]').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const dd = +cell.dataset.d, mm = +cell.dataset.m, yy = +cell.dataset.y;
+      state.follow = false; $('optFollow').checked = false;
+      state.sel = new Date(yy, mm, dd, state.sel.getHours(), state.sel.getMinutes());
+      renderOpen();
+      document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === 'open'));
+      document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('active', s.id === 'tab-open'));
+    });
+  });
+}
+$('calPrev').addEventListener('click', () => { state.calM--; if (state.calM < 0){ state.calM = 11; state.calY--; } renderCalendar(); });
+$('calNext').addEventListener('click', () => { state.calM++; if (state.calM > 11){ state.calM = 0; state.calY++; } renderCalendar(); });
+
+/* ---------- 五运六气 ---------- */
+function renderYunqi(){
+  const y = state.yqY || calcAll(new Date(), getOpts()).yunqiY;
+  state.yqY = y;
+  $('yqYear').value = y;
+  const yq = yunqiYearData(y);
+  const curStep = currentQiStep(y, new Date().getTime());
+  $('yqContent').innerHTML =
+    '<div class="yunqi-big">' +
+    '<div class="yq-item"><div class="k">岁运（中运）</div><div class="v">' + esc(yq.yun) + '运' + (yq.taiGuo ? '太过' : '不及') + '</div></div>' +
+    '<div class="yq-item"><div class="k">司天（三之气）</div><div class="v" style="font-size:.95rem">' + esc(yq.siTian[0]) + '</div></div>' +
+    '<div class="yq-item"><div class="k">在泉（终之气）</div><div class="v" style="font-size:.95rem">' + esc(yq.zaiQuan) + '</div></div>' +
+    '<div class="yq-item"><div class="k">分类</div><div class="v" style="font-size:.95rem">' + esc(yq.cat) + '</div></div>' +
+    '</div>' +
+    '<h3 style="margin-top:10px">五运</h3>' +
+    '<p class="small">主运（每年固定，木火土金水，大寒起，每步73日零5刻）：</p>' +
+    '<div class="stepbar">' + yq.zhuYun.map((s, i) =>
+      '<div class="st"><div class="n">' + (i + 1) + '运</div><div class="v">' + (s.tai ? '太' : '少') + esc(s.yin) + '</div><div class="n">' + esc(s.wx) + '</div></div>').join('') + '</div>' +
+    '<p class="small">客运（以岁运为初运，太少相生）：</p>' +
+    '<div class="stepbar">' + yq.keYun.map((s, i) =>
+      '<div class="st"><div class="n">' + (i + 1) + '运</div><div class="v">' + (s.tai ? '太' : '少') + esc(s.yin) + '</div><div class="n">' + esc(s.wx) + '</div></div>').join('') + '</div>' +
+    '<h3 style="margin-top:10px">六气</h3>' +
+    '<p class="small">主气（地气，固定不变）：</p>' +
+    '<div class="stepbar">' + yq.jiaLin.map((j, i) =>
+      '<div class="st' + (i === curStep ? ' cur' : '') + '"><div class="n">' + esc(ZHU_QI[i].name) + '</div><div class="v">' + esc(ZHU_QI[i].qi.replace('气','')) + '</div><div class="n">' + esc(ZHU_QI[i].from) + '—' + esc(ZHU_QI[i].to) + '</div></div>').join('') + '</div>' +
+    '<p class="small">客气（天气，以司天为三之气）：</p>' +
+    '<div class="stepbar">' + yq.keQi.map((q, i) =>
+      '<div class="st' + (i === curStep ? ' cur' : '') + '"><div class="n">' + esc(ZHU_QI[i].name) + (i === 2 ? '·司天' : i === 5 ? '·在泉' : '') + '</div><div class="v">' + esc(q.replace('气','')) + '</div></div>').join('') + '</div>' +
+    '<table class="tbl"><tr><th>步</th><th>客气</th><th>主气</th><th>客主加临</th><th>时令主病</th></tr>' +
+    yq.jiaLin.map((j, i) =>
+      '<tr class="' + (i === curStep ? 'cur' : '') + '"><td>' + esc(ZHU_QI[i].name) + '</td><td>' + esc(j.kq) + '</td><td>' + esc(ZHU_QI[i].qi) + '</td><td>' + esc(j.judge) + '</td><td style="text-align:left;font-size:.78rem">' + esc(QI_BING[j.kq]) + '</td></tr>').join('') + '</table>' +
+    '<h3 style="margin-top:10px">发病分析</h3>' +
+    '<div class="note"><b>岁运（' + esc(yq.yun) + '运' + (yq.taiGuo ? '太过' : '不及') + '）</b>：' + esc(yq.yunBing) + '</div>' +
+    '<div class="note"><b>司天（' + esc(yq.siTian[0]) + '）</b>：' + esc(yq.siTianBing) + '</div>' +
+    '<p class="small" style="margin-top:8px">运气相合：' + esc(yq.cat) + '。客主加临——主胜为逆、客胜为从；气相得则和，不相得则病。' +
+    '（参考《黄帝内经》运气七篇）</p>';
+}
+$('yqPrev').addEventListener('click', () => { state.yqY--; renderYunqi(); });
+$('yqNext').addEventListener('click', () => { state.yqY++; renderYunqi(); });
+$('yqYear').addEventListener('change', e => { state.yqY = +e.target.value; renderYunqi(); });
+
+/* ---------- 五门十变页 ---------- */
+function renderWumen(){
+  const c = calcAll(state.sel, getOpts());
+  const wmOther = c.wm.a === GAN[c.dg] ? c.wm.b : c.wm.a;
+  $('wmContent').innerHTML =
+    '<h3>🕯 五门十变 <span class="tag wm">十天干合化</span></h3>' +
+    '<p class="note">本日' + esc(GAN[c.dg]) + '日（' + esc(c.dayGanziName) + '）：合化 <b>' + esc(GAN[c.dg]) + '⇄' + esc(wmOther) + '化' + esc(c.wm.wx) + '</b>，夫妻经 <b>' + esc(c.wm.jm) + '</b>。二经五输穴可合日互用（纳甲法：阳日阴时、阴日阳时取合日之穴）。</p>' +
+    '<table class="tbl"><tr><th>五门</th><th>合化</th><th>五行</th><th>夫妻经</th></tr>' +
+    WM_HEHUA.map(w => '<tr><td>' + esc(w.a + w.b) + '</td><td>' + esc(w.a + '化' + w.wx + '·' + w.b + '化' + w.wx) + '</td><td>' + esc(w.wx) + '</td><td>' + esc(w.jm) + '</td></tr>').join('') + '</table>' +
+    '<h3 style="margin-top:12px">五输穴五行配属</h3>' +
+    '<p class="small">阴经：井木→荥火→输土→经金→合水；阳经：井金→荥水→输木→经火→合土。</p>' +
+    '<div style="overflow-x:auto"><table class="tbl"><tr><th>经脉</th><th>五行</th><th>井</th><th>荥</th><th>输</th><th>经</th><th>合</th><th>原</th></tr>' +
+    MERIDIANS.map(md =>
+      '<tr><td>' + esc(md.name) + '</td><td>' + esc(md.wx) + '</td><td>' + esc(md.j) + '</td><td>' + esc(md.x) + '</td><td>' + esc(md.shu) + '</td><td>' + esc(md.jing) + '</td><td>' + esc(md.he) + '</td><td>' + esc(md.yuan) + '</td></tr>').join('') + '</table></div>' +
+    '<div class="note">五门十变歌：甲己化土乙庚金，丙辛化水丁壬木，戊癸化火是根源。夫妻配穴互用（如甲日可取己日穴），是子午流注纳甲法「合日互用」的理论基础。</div>';
+}
+
+/* ---------- 说明页 ---------- */
+function renderAbout(){
+  $('aboutContent').innerHTML =
+    '<h3>📖 歌诀与算法说明</h3>' +
+    '<div class="poem"><div class="t">五鼠遁（日上起时）</div>甲己还加甲，乙庚丙作初，丙辛从戊起，丁壬庚子居，戊癸何方发，壬子是真途。</div>' +
+    '<div class="poem"><div class="t">八法逐日干支歌（灵龟八法·日基数）</div>甲己辰戌丑未十，乙庚申酉九为期，丁壬寅卯八成数，戊癸巳午七相宜，丙辛亥子亦七数，逐日干支即得知。</div>' +
+    '<div class="poem"><div class="t">八法临时干支歌（灵龟八法·时基数）</div>甲己子午九宜用，乙庚丑未八无疑，丙辛寅申七作数，丁壬卯酉六须知，戊癸辰戌各有五，巳亥单加四共齐。</div>' +
+    '<div class="poem"><div class="t">九宫配穴歌</div>坎一联申脉，照海坤二五，震三属外关，巽四临泣数，乾六是公孙，兑七后溪府，艮八系内关，离九列缺主。</div>' +
+    '<div class="poem"><div class="t">飞腾八法歌</div>壬甲公孙即是乾，丙居艮上内关然，戊为临泣生坎水，庚属外关震相连，辛上后溪装巽卦，乙癸申脉到坤传，己土列缺南离上，丁居照海兑金全。</div>' +
+    '<h3 style="margin-top:12px">计算方法</h3>' +
+    '<ul style="padding-left:20px;font-size:.9rem">' +
+    '<li><b>干支</b>：日干支以1949-10-01甲子日为锚点推算；子时（23:00）换日（可用开关关闭）；时干支用五鼠遁；月干支用五虎遁（以节为界）；年干支以立春为界。</li>' +
+    '<li><b>纳甲法</b>：阳日阳时开阳经穴（井→荥→输→经→合），阴日阴时开阴经穴；开输穴时返本还原开当日经原穴；阳日最后一穴气纳三焦、阴日最后一穴血纳包络；阳日阴时/阴日阳时合日互用。</li>' +
+    '<li><b>灵龟八法</b>：日干支基数+时干支基数，阳日除九、阴日除六，余数配九宫；余5按「中宫寄坤（照海）」或按性别「男寄坤/女寄艮」处理，可切换。</li>' +
+    '<li><b>纳子法</b>：子胆丑肝寅肺卯大肠辰胃巳脾午心未小肠申膀胱酉肾戌心包亥三焦；虚则补其母、实则泻其子，兼用本穴、原穴。</li>' +
+    '<li><b>五运六气</b>：天干化运、地支化气、阳干太过阴干不及；岁运以立春交接；客气以司天为三之气顺三阴三阳序排；客主加临判顺逆。</li>' +
+    '<li><b>节气与农历</b>：采用 lunar-javascript（Meeus 天文算法），误差约数分钟。</li>' +
+    '</ul>' +
+    '<h3 style="margin-top:12px">参考来源</h3>' +
+    '<p class="small">《针灸学》统编教材 · 《针灸大成》（徐凤子午流注） · 《黄帝内经·素问》运气七篇 · Meeus《Astronomical Algorithms》。</p>' +
+    '<div class="note"><b>免责声明</b>：本工具仅供中医理论学习与研究参考，不构成医疗建议。针灸是医疗行为，须由具备资质的执业医师在辨证后操作。</div>';
+}
+
+/* ---------- 初始化 ---------- */
+updateSexVisibility();
+renderOpen();
+renderCalendar();
+state.yqY = calcAll(new Date(), getOpts()).yunqiY;
+renderYunqi();
+renderWumen();
+renderAbout();
+startAuto();
+
+})();
+/*__CORE_END__*/
+</script>
+</body>
+</html>
